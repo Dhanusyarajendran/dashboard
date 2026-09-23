@@ -28,7 +28,7 @@ const[error, setError] = useState('');
       }
     })
     .catch(error=>{
-      console.error(error);
+      console.log(error);
       setError('Unable to connect to the server');
     })
   };

@@ -77,7 +77,7 @@ const Home = () => {
 
   return (
     <div className='container'>
-        <div className='px-3 d-flex justify-content-around mt-3'>
+        <div className='px-3 d-flex justify-content-around mt-3 bg-grey'>
         <div className='border pt-2 pb-3 px-3 w-25 shawdow-sm rounded mx-auto mt-5'>
             <div className='text-center mt-3'>
                 <h4>Admin</h4>
