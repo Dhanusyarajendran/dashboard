@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import employeeimg from '../assets/employeeimg.png';
 
 const EmployeeDetail = () => {
   const { id } = useParams();
@@ -11,15 +12,15 @@ const EmployeeDetail = () => {
     axios
       .get(`http://localhost:5000/employee/employeedetail/${id}`)
       .then(response => {
-        if(response.data.Status){
-        setEmployee(response.data.Result[0]);
+        if (response.data.Status) {
+          setEmployee(response.data.Result[0]);
         }
-         else{
+        else {
           alert(response.data.Error)
         }
       })
-        
-    
+
+
       .catch((error) => {
         console.error(error);
       });
@@ -32,14 +33,23 @@ const EmployeeDetail = () => {
   }
 
   return (
-    <div>
-      <p>Name: {employee.name}</p>
-      <p>Email: {employee.email}</p>
-      <p>Salary: {employee.salary}</p>
-      <p>Address: {employee.address}</p>
-      
+    <div >
+      <div className='d-flex justify-content-center flex-column align-items-center mt-5 vh-75'>
+        <img src={employeeimg} alt="Employee profile" className="d-block rounded-circle object-fit-cover w-50 h-50" />
+        <div className='d-flex justify-content-center flex-column align-items-center mt-5'>
+          <p className='fw-bold fs-4'>Name: {employee.name}</p>
+          <p className='fw-bold fs-4'>Email: {employee.email}</p>
+          <p className='fw-bold fs-4'>Salary: {employee.salary}</p>
+        </div>
+      </div>
+      <div className='d-flex justify-content-center align-items-center '>
+        <button type='submit' className='btn btn-success me-2'>Edit</button>
+        <button type='submit' className='btn btn-danger'>Delete</button>
+      </div>
     </div>
+
   );
 };
+
 
 export default EmployeeDetail;
