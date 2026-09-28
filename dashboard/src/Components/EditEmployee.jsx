@@ -15,6 +15,8 @@ const EditEmployee = () => {
         password: "",
         salary : "",
         address : "",
+        image : "",
+
         
     }); 
 
@@ -40,6 +42,7 @@ const EditEmployee = () => {
                     password: response.data.password,
                     salary: response.data.salary,
                     address: response.data.address,
+                    image: response.data.image,
                 });
             })
             .catch(error => {
@@ -111,6 +114,10 @@ const EditEmployee = () => {
                     <input type="address" id="inputAddress" placeholder="Enter Address" className="form-control w-100 my-3" autoComplete="off" value={employee.address} onChange={(e) => setEmployee({...employee, address: e.target.value})} />
                     </div>
 
+                     <div>
+                    <label htmlFor="inputGroupFile01" className='fw-bold'>Select Image:</label>
+                    <input type="file" id="inputGroupFile01" placeholder="Enter Address" className="form-control w-100 my-3" autoComplete="off"  onChange={(e) => setEmployee({...employee, image: e.target.files[0] })} />
+                    </div>
 
                     <button type="submit" className='btn btn-success'>Edit Employee</button>
                 </form> 

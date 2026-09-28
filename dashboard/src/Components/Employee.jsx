@@ -57,6 +57,7 @@ const Employee = () => {
         <table className='table mt-3'>
             <thead>
                 <th>Name</th>
+                <th>image</th>
                 <th>Email</th>
                 <th>salary</th>
                 <th>address</th>
@@ -67,9 +68,23 @@ const Employee = () => {
                    {employee.map((output)=>(
                     <tr key={output.id}>
                       <td>{output.name}</td>
+                       <td>
+                        {output.image ? (
+                          <img
+                            src={`http://localhost:5000/uploads/${output.image}`}
+                            alt={`${output.name}'s profile`}
+                            width="50"
+                            height="50"
+                            className="rounded-circle object-fit-cover"
+                          />
+                        ) : (
+                          'No image'
+                        )}
+                      </td>
                       <td>{output.email}</td>
                       <td>{output.salary}</td>
                       <td>{output.address}</td>
+                     
                       <td>
                         <Link to={`/dashboard/editemployee/${output.id}`} className='btn btn-info btn-sm me-2' >Edit</Link>
                         <Link className='btn btn-warning btn-sm' onClick={() => handleDelete(output.id)}>Delete</Link>

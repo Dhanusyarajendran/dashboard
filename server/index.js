@@ -4,9 +4,13 @@ import cookieParser from "cookie-parser";
 import adminRoute from "./Routes/AdminRoute.js";
 import employeeRoute from "./Routes/EmployeeRoute.js";
 import jwt from "jsonwebtoken";
+import path from "path";
+import { fileURLToPath } from "url";
 
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use(cors({
   origin: ["http://localhost:5173", "http://localhost:5177"],
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -14,6 +18,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/auth', adminRoute); //for admin route
 app.use('/employee', employeeRoute); //for employee route
 
