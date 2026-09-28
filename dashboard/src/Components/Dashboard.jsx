@@ -11,7 +11,8 @@ const Dashboard =() =>{
         axios.get('http://localhost:5000/auth/logout')
             .then(response => {
                 if(response.data.Status){
-                    navigate('/login');
+                    navigate('/');
+                    localStorage.removeItem("valid");
                 }
             })
             .catch(error => {

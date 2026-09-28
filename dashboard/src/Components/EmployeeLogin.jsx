@@ -17,6 +17,7 @@ const EmployeeLogin = () => {
     .then(response => {
         if(response.data.loginStatus){
         navigate('/employeedetail/' + response.data.id);
+        localStorage.setItem("valid", true);// store in localstorage and check valid or not
         }
         else{
             alert(response.data.message);

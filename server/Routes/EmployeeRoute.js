@@ -21,7 +21,7 @@ router.post('/employeelogin', (req, res) => {
                 if(response){
                      const email = result[0].email;
             const token = jwt.sign(
-                { role: "employee", email: email }, 'employee_secret_key', { expiresIn: '1d' }
+                { role: "employee", email: email }, 'jwt_secret_key', { expiresIn: '1d' }
             ); //for cokie we need to create a token
              res.cookie('token', token); //set the cookie with the token
             return res.json({loginStatus: true, message: 'Login successful',  id: result[0].id,
@@ -50,6 +50,13 @@ router.get('/employeedetail/:id', (req, res)=>{
     })
     })
 
- 
+ //logout edit
+
+ router.get('/logout', (req, res) =>{
+    res.clearCookie('token');
+   return res.json ({Status:true, message:"Logout Successful"})
+ })
+
+
 
 export default router;  

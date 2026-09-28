@@ -18,7 +18,7 @@ router.post('/login', (req, res) => {
         if (err) return res.json({ message: 'Database error', error: err });
         if (result.length > 0) {
             const email = result[0].email;
-            const token = jwt.sign({ role: "admin", email: email }, 'your_secret_key', { expiresIn: '1d' }); //for cokie we need to create a token
+            const token = jwt.sign({ role: "admin", email: email, id: result[0].id }, 'jwt_secret_key', { expiresIn: '1d' }); //for cokie we need to create a token
             res.cookie('token', token,); //set the cookie with the token
             return res.json({ loginStatus: true, message: 'Login successful' });
         } else {
@@ -152,6 +152,34 @@ router.get('/adminrecord', (req, res) => {
     connection.query(sql, (err, result) => {
         if (err) return res.json({ Status: false, Error: "Query error" });
         return res.json({ Status: true, Result: result });
+    });
+});
+
+//for profile page
+router.get('/profile', (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).json({ Status: false, Error: 'Authentication required' });
+    }
+
+    jwt.verify(token, 'jwt_secret_key', (err, decoded) => {
+        if (err || decoded.role !== 'admin') {
+            return res.status(401).json({ Status: false, Error: 'Invalid or expired token' });
+        }
+
+        const sql = 'SELECT id, name, email FROM admin WHERE id = ?';
+        connection.query(sql, [decoded.id], (queryError, result) => {
+            if (queryError) {
+                return res.status(500).json({ Status: false, Error: 'Query error' });
+            }
+
+            if (result.length === 0) {
+                return res.status(404).json({ Status: false, Error: 'Admin profile not found' });
+            }
+
+            return res.json({ Status: true, Result: result[0] });
+        });
     });
 });
 

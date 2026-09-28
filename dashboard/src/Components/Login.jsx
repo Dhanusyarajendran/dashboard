@@ -21,6 +21,7 @@ const[error, setError] = useState('');
     .then((response)=>{
       if(response.data.loginStatus){
         navigate('/dashboard');
+        localStorage.setItem("valid", true);
       }else {
         setError(response.data.message);
         // alert(response.data.message); foe error message 

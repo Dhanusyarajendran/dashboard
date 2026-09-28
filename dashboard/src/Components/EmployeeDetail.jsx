@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import employeeimg from '../assets/employeeimg.png';
+import { useNavigate } from 'react-router-dom';
 
 const EmployeeDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [employee, setEmployee] = useState([]);
 
@@ -26,6 +28,17 @@ const EmployeeDetail = () => {
       });
   }, []);
 
+  
+  const handleLogout = () => {
+    axios.get('http://localhost:5000/employee/logout')
+    .then(response => {
+      if(response.data.Status){
+        navigate('/')
+        localStorage.removeItem("valid");
+      }
+    })
+    .catch(err => console.log(err))
+  }
   //something is not showing it will print error messgage
 
   if (!employee) {
@@ -39,12 +52,12 @@ const EmployeeDetail = () => {
         <div className='d-flex justify-content-center flex-column align-items-center mt-5'>
           <p className='fw-bold fs-4'>Name: {employee.name}</p>
           <p className='fw-bold fs-4'>Email: {employee.email}</p>
-          <p className='fw-bold fs-4'>Salary: {employee.salary}</p>
+          <p className='fw-bold fs-4'>Salary: ${employee.salary}</p>
         </div>
       </div>
       <div className='d-flex justify-content-center align-items-center '>
         <button type='submit' className='btn btn-success me-2'>Edit</button>
-        <button type='submit' className='btn btn-danger'>Delete</button>
+        <button type='submit' className='btn btn-danger' onClick={handleLogout}>Delete</button>
       </div>
     </div>
 
