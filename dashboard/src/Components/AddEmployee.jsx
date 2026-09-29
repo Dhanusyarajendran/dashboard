@@ -4,11 +4,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
 
-
-
 const AddEmployee = () => {
 
-    
     const [employee, setEmployee] = useState ({
         name : '',
         email : '',
@@ -20,7 +17,8 @@ const AddEmployee = () => {
         
     }); 
 
-     const [category, setCategory] = useState([]);
+    
+const [category, setCategory] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:5000/auth/category')
@@ -56,15 +54,8 @@ const AddEmployee = () => {
       axios.post('http://localhost:5000/auth/addemployee', formData)
             .then(response => {
                 if (response.data.Status) {
-            setEmployee({
-              name: '',
-              email: '',
-              password: '',
-              salary: '',
-              address: '',
-              image: '',
-              category: '',
-            });
+            setEmployee(''); 
+
                     console.log(response.data);
                     alert("employee added successfully");
                     navigate('/dashboard/employees');
@@ -79,8 +70,8 @@ const AddEmployee = () => {
 
             });
     }
-
     
+
     return (
         <div className="container py-5">
             <div className="p-5 border vh-75 w-50 shadow mt-5 d-flex align-items-center justify-content-center mx-auto rounded">
@@ -114,12 +105,12 @@ const AddEmployee = () => {
                     </div>
 
                    <div>
-                    <label htmlFor="address" className='fw-bold'>Category:</label>
-                    <select name='category' id='category' className='form-select'  value={employee.category}onChange={(e) => setEmployee({ ...employee, category: e.target.value })}>
+                    <label htmlFor="address" className='fw-bold'>Select Category:</label>
+                    <select name='category' id='category' className='form-select my-3'  value={employee.category}onChange={(e) => setEmployee({ ...employee, category: e.target.value })}>
                           {category.map(output =>{
                             return (
-                            <option key = {output.id} value={output.name}>
-                                {output.name}
+                            <option key = {output.id} value={output.category}>
+                                {output.category}
                                 </option>
                             )
                           })}
@@ -129,7 +120,7 @@ const AddEmployee = () => {
 
                     <div>
                     <label htmlFor="inputGroupFile01" className='fw-bold'>Select Image:</label>
-                    <input type="file" id="inputGroupFile01" accept="image/*" className="form-control w-100 my-3" onChange={(e) => setEmployee({...employee, image: e.target.files[0] || '' })} />
+                    <input type="file" id="inputGroupFile01" name="image" className="form-control w-100 my-3" onChange={(e) => setEmployee({...employee, image: e.target.files[0] || '' })} />
                     </div>
 
 
@@ -143,6 +134,4 @@ const AddEmployee = () => {
 }
 
 
-
-export default AddEmployee;  
-
+export default AddEmployee; 

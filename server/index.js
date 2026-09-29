@@ -18,7 +18,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'Images')));
 app.use('/auth', adminRoute); //for admin route
 app.use('/employee', employeeRoute); //for employee route
 

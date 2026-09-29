@@ -72,7 +72,7 @@ const Employee = () => {
                         {output.image ? (
                           <img
                             src={`http://localhost:5000/uploads/${output.image}`}
-                            alt={`${output.name}'s profile`}
+                            alt={`${output.name}`}
                             width="50"
                             height="50"
                             className="rounded-circle object-fit-cover"

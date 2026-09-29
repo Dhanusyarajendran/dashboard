@@ -2,40 +2,22 @@ import express from "express";
 import connection from '../Utils/db.js';
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from 'bcrypt';
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import multer from "multer";
+import path from "path";
 
 
 const router = express.Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const uploadDirectory = path.join(__dirname, '..', 'uploads');
-
-if (!fs.existsSync(uploadDirectory)) {
-    fs.mkdirSync(uploadDirectory, { recursive: true });
-}
-
+// Configure multer before any route uses upload.
 const storage = multer.diskStorage({
-    destination: uploadDirectory,
-    filename: (_req, file, callback) => {
-        const extension = path.extname(file.originalname);
-        callback(null, `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`);
+    destination: (req, file, cb) => {
+        cb(null, 'public/Images');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname));
     }
 });
-
-const upload = multer({
-    storage,
-    fileFilter: (_req, file, callback) => {
-        if (file.mimetype.startsWith('image/')) {
-            callback(null, true);
-        } else {
-            callback(new Error('Only image files are allowed'));
-        }
-    }
-});
+const upload = multer({ storage });
 
 
 //create our api for login
@@ -80,7 +62,7 @@ router.get('/category', (req, res) =>{
 
 
 //create api for add employee
-router.post('/addemployee', upload.single('image'), (req, res) => {
+router.post('/addemployee', upload.single('image'),(req, res) => {
    const sql = 'INSERT INTO employee (name, email, password, salary, address, image, category) VALUES (?) ';
    bcrypt.hash(req.body.password, 10, (err, hash) => {
     if(err) return res.json({Status: false, Error: "query error"})
@@ -101,8 +83,6 @@ router.post('/addemployee', upload.single('image'), (req, res) => {
    });
 });
 });
-
-
 
 //create api for get employee from database
 router.get('/employee', (req, res) =>{
