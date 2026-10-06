@@ -41,6 +41,7 @@ router.post('/login', (req, res) => {
 
 })
 
+//for category page
 //create api for category
 router.post('/addcategory', (req, res) => {
     const sql = 'INSERT INTO category (`category`) VALUES(?)';
@@ -49,6 +50,17 @@ router.post('/addcategory', (req, res) => {
         return res.json({ Status: true, message: 'category successfully added' });
     });
 });
+
+//create api for delete category
+router.delete('/deletecategory/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = 'DELETE FROM category WHERE id = ?';
+    connection.query(sql, [id], (err, result) => {
+        if (err) return res.json({ Status: false, error: err.message });
+        return res.json({ Status: true, message: 'Category deleted successfully' });
+    });
+});
+
 
 
 //create api for get category from database
@@ -59,6 +71,7 @@ router.get('/category', (req, res) =>{
         return res.json ({Status : true, Result : result })
     })
 })
+
 
 
 //create api for add employee
@@ -117,6 +130,8 @@ router.get('/employee/:id', (req, res) => {
 }
 )
 
+
+
 //code for delete employee
 router.delete('/deleteemployee/:id', (req, res) => {
     const id  = req.params.id;
@@ -168,45 +183,119 @@ router.get('/adminrecord', (req, res) => {
     });
 });
 
-//for profile page
-router.get('/profile', (req, res) => {
+
+
+
+//for profile 
+
+// router.get("/profile", (req, res) => {
+//   // Get token from cookie
+//   const token = req.cookies.token;
+
+//   if (!token) {
+//     return res.json({
+//       Status: false,
+//       Error: "You are not logged in."
+//     });
+//   }
+
+//   // Verify token
+//  jwt.sign({ id: result[0].id }, "secret123"), (err, decoded) => {
+//     if (err) {
+//       return res.json({
+//         Status: false,
+//         Error: "Invalid or expired login session."
+//       });
+//     }
+
+//     // Get admin ID from JWT
+//     const adminId = decoded.id;
+
+//     const sql = ` SELECT id, name, email FROM admin WHERE id = ?`;
+
+//     connection.query(sql, [adminId], (err, result) => {
+//       if (err) {
+//         console.error("Profile SQL Error:", err);
+
+//         return res.json({
+//           Status: false,
+//           Error: "Database error."
+//         });
+//       }
+
+//       if (result.length === 0) {
+//         return res.json({
+//           Status: false,
+//           Error: "Admin profile not found."
+//         });
+//       }
+
+//       return res.json({ Status: true, Result: result[0]});
+//     });
+//     };
+// })
+
+
+router.get("/profile", (req, res) => {
+
     const token = req.cookies.token;
 
+    console.log("TOKEN:", token);
+
     if (!token) {
-        return res.status(401).json({ Status: false, Error: 'Authentication required' });
+        return res.json({
+            Status: false,
+            Error: "No login token found."
+        });
     }
 
-    jwt.verify(token, 'jwt_secret_key', (err, decoded) => {
-        if (err || decoded.role !== 'admin') {
-            return res.status(401).json({ Status: false, Error: 'Invalid or expired token' });
+    jwt.verify(token, "jwt_secret_key", (err, decoded) => {
+
+        if (err) {
+            console.log("JWT ERROR:", err);
+
+            return res.json({
+                Status: false,
+                Error: "Invalid or expired login session."
+            });
         }
 
-        const sql = 'SELECT id, name, email FROM admin WHERE id = ?';
-        connection.query(sql, [decoded.id], (queryError, result) => {
-            if (queryError) {
-                return res.status(500).json({ Status: false, Error: 'Query error' });
+        console.log("DECODED:", decoded);
+
+        const sql = `
+            SELECT id, email
+            FROM admin
+            WHERE id = ?
+        `;
+
+        connection.query(sql, [decoded.id], (err, result) => {
+
+            if (err) {
+                console.log("DATABASE ERROR:", err);
+
+                return res.json({
+                    Status: false,
+                    Error: "Database error."
+                });
             }
 
             if (result.length === 0) {
-                return res.status(404).json({ Status: false, Error: 'Admin profile not found' });
+                return res.json({
+                    Status: false,
+                    Error: "Admin profile not found."
+                });
             }
 
-            return res.json({ Status: true, Result: result[0] });
+            return res.json({
+                Status: true,
+                Result: result[0]
+            });
         });
     });
 });
 
-//code for delete admin
-// router.delete('/deleteadmin/:id', (req, res) => {
-//     const id  = req.params.id;
-//     const sql = 'DELETE FROM admin WHERE id = ?';   
-//     connection.query(sql, [id], (err, result) => {
-//         if(err) return res.json({Status: false, Error: "Query error"});
-//         return res.json({Status: true, message: "Admin deleted successfully"});
-//     }
-//     )
-// })
 
+//for logout  
 
 router.get('/logout', (req, res) => {
     res.clearCookie('token');

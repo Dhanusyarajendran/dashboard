@@ -11,6 +11,7 @@ import Profile from './Components/Profile.jsx';
 import AddCategory from './Components/AddCategory.jsx';
 import AddEmployee from './Components/AddEmployee.jsx';
 import EditEmployee from './Components/EditEmployee.jsx';
+import EditCategory from './Components/EditCategory.jsx';
 import Start from './Components/Start.jsx';
 import EmployeeLogin from "./Components/EmployeeLogin.jsx";
 import EmployeeDetail from './Components/EmployeeDetail.jsx';
@@ -37,6 +38,7 @@ function App() {
       <Route path='addcategory' element={<AddCategory />} />
       <Route path='addemployee' element = {<AddEmployee/>} />
       <Route path='editemployee/:id' element = {<EditEmployee/>} />
+      <Route path='editcategory/:id' element={<EditCategory />} />
 </Route>
      
   
